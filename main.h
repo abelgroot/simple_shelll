@@ -14,7 +14,7 @@
 
 /* Function prototypes */
 ssize_t read_command(char **line, size_t *len);
-int execute_command(char *line);
+int execute_command(char *line, char *env[]);
 char *find_command_in_path(char *cmd);
 
 #endif /* MAIN_H */
