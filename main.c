@@ -1,6 +1,20 @@
 #include "main.h"
 
 /**
+ * print_prompt - Prints the shell prompt to the standard output
+ *
+ * This function displays the prompt symbol for the user to enter a command.
+ * It is typically called before reading a command in a loop.
+ */
+void print_prompt(void)
+{
+	if (isatty(STDIN_FILENO))
+	{
+		write(STDOUT_FILENO, "#cisfun$ ", 9);
+	}
+}
+
+/**
  * main - Entry point of the simple shell
  *
  * Return: Status of the shell execution
