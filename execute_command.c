@@ -46,6 +46,7 @@ int execute_command(char *line)
 		argv[i] = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
+
 	if (argv[0] == NULL)
 		return (0);  /* Empty command */
 	cmd_path = find_command_in_path(argv[0]);

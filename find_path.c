@@ -22,8 +22,8 @@ char *build_cmd_path(const char *dir, const char *cmd)
 }
 
 /**
- * find_command_in_path - Searches for a
- * command in the directories listed in PATH.
+ * find_command_in_path - Searches for a command
+ * in the directories listed in PATH.
  * @cmd: The command to search for.
  *
  * Return: The full path to the command if found, or NULL if not found.
