@@ -1,46 +1,41 @@
 #include "main.h"
 
 /**
- * main - Entry point for the simple shell.
+ * main - Entry point of the simple shell program.
+ * @argc: The number of command line arguments.
+ * @argv: The array of command line arguments.
+ * @env: The environment variables.
  *
- * Return: Always 0 on success, or exit with failure status on error.
+ * Return: 0 on success, or -1 on failure.
  */
-int main(void)
+int main(int argc, char *argv[], char *env[])
 {
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
-	int status;
 
-	if (isatty(STDIN_FILENO))
+	(void)argc;
+
+	while (1)
 	{
-		/* Interactive mode */
-		while (1)
-		{
+		if (isatty(STDIN_FILENO))
 			printf("#cisfun$ ");
-			nread = read_command(&line, &len);
-			if (nread == -1)
-			{
-				free(line);
-				exit(EXIT_FAILURE);
-			}
-
-			status = execute_command(line);
-			if (status == -1)
-				perror("./hsh");
-		}
-	}
-	else
-	{
-		/* Script mode */
-		while ((nread = read_command(&line, &len)) != -1)
+		
+		nread = getline(&line, &len, stdin);
+		if (nread == -1)
 		{
-			status = execute_command(line);
-			if (status == -1)
-				perror("./hsh");
+			free(line);
+			if (isatty(STDIN_FILENO))
+				printf("\n");
+			break;
 		}
-		free(line);
+
+		if (line[nread - 1] == '\n')
+			line[nread - 1] = '\0';
+
+		execute_command(line, env);
 	}
 
+	free(line);
 	return (0);
 }
