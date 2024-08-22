@@ -1,56 +1,78 @@
 #include "main.h"
 
 /**
- * build_cmd_path - Builds a full path for the command.
- * @dir: The directory path.
- * @cmd: The command to build the path for.
+ * find_path - Finds the full path of a command.
+ * @command: The command to find.
+ * @env: The environment variables.
  *
- * Return: The full path to the command or NULL on failure.
+ * Return: The full path of the command or NULL if not found.
  */
-char *build_cmd_path(const char *dir, const char *cmd)
+char *find_path(char *command, char **env)
 {
-	size_t len;
-	char *cmd_path;
+	char **path_list = build_path_list(env);
+	char *full_path = NULL;
+	int i;
 
-	len = strlen(dir) + strlen(cmd) + 2;
-	cmd_path = malloc(len);
-	if (!cmd_path)
+	if (path_list == NULL)
 		return (NULL);
 
-	snprintf(cmd_path, len, "%s/%s", dir, cmd);
-	return (cmd_path);
+	for (i = 0; path_list[i]; i++)
+	{
+		full_path = malloc(strlen(path_list[i]) + strlen(command) + 2);
+		if (full_path == NULL)
+		{
+			free_path_list(path_list);
+			return (NULL);
+		}
+
+		strcpy(full_path, path_list[i]);
+		strcat(full_path, "/");
+		strcat(full_path, command);
+
+		if (access(full_path, X_OK) == 0)
+		{
+			free_path_list(path_list);
+			return (full_path);
+		}
+		free(full_path);
+	}
+	free_path_list(path_list);
+	return (NULL);
 }
 
 /**
- * find_command_in_path - Searches for a command
- * in the directories listed in PATH.
- * @cmd: The command to search for.
+ * build_path_list - Builds a linked list of PATH directories.
+ * @env: The environment variables.
  *
- * Return: The full path to the command if found, or NULL if not found.
+ * Return: An array of directories in the PATH or NULL on failure.
  */
-char *find_command_in_path(char *cmd)
+char **build_path_list(char **env)
 {
-	char *path_env, *path, *cmd_path;
-	struct stat st;
+	char *path_var = get_env_var("PATH", env);
+	char **path_list = NULL;
+	int i = 0;
 
-	path_env = getenv("PATH");
-	if (!path_env)
+	if (path_var == NULL)
 		return (NULL);
 
-	path = strtok(path_env, ":");
-	while (path != NULL)
+	path_list = malloc(BUFFER_SIZE * sizeof(char *));
+	if (path_list == NULL)
+		return (NULL);
+
+	path_list[i] = strtok(path_var, ":");
+	while (path_list[i] != NULL)
 	{
-		cmd_path = build_cmd_path(path, cmd);
-		if (!cmd_path)
-			return (NULL);
-
-		if (stat(cmd_path, &st) == 0 && S_ISREG(st.st_mode) &&
-			(st.st_mode & S_IXUSR))
-			return (cmd_path);
-
-		free(cmd_path);
-		path = strtok(NULL, ":");
+		i++;
+		path_list[i] = strtok(NULL, ":");
 	}
+	return (path_list);
+}
 
-	return (NULL);
+/**
+ * free_path_list - Frees the linked list of PATH directories.
+ * @path_list: The list to free.
+ */
+void free_path_list(char **path_list)
+{
+	free(path_list);
 }

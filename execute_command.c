@@ -1,87 +1,60 @@
 #include "main.h"
 
 /**
- * handle_command_not_found - Prints an error message for not found commands.
- * @cmd: The command that was not found.
- */
-void handle_command_not_found(char *cmd)
-{
-	perror(cmd);
-}
-
-/**
- * execute_command_in_child - Forks a child process and executes the command.
- * @argv: The command and its arguments.
+ * execute_command - Executes a command in a child process.
+ * @command: The command to execute.
+ * @args: The arguments for the command.
  * @env: The environment variables.
  *
  * Return: 0 on success, -1 on failure.
  */
-int execute_command_in_child(char *argv[], char *env[])
+int execute_command(char *command, char **args, char *env[])
 {
-	pid_t child_pid;
+	pid_t pid;
 	int status;
 
-	child_pid = fork();
-	if (child_pid == -1)
+	if (command == NULL)
+		return (-1);
+
+	pid = fork();
+	if (pid == -1)
 	{
-		perror("./hsh");
+		perror("fork");
 		return (-1);
 	}
-	if (child_pid == 0)
+	if (pid == 0)
 	{
-		if (execve(argv[0], argv, env) == -1)
+		if (execve(command, args, env) == -1)
 		{
-			handle_command_not_found(argv[0]);
+			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
-		waitpid(child_pid, &status, 0);
+		do {
+			waitpid(pid, &status, WUNTRACED);
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
-
 	return (0);
 }
 
 /**
- * is_absolute_path - Checks if the command is an absolute path.
- * @cmd: The command to check.
+ * is_absolute_path - Checks if a command is an absolute path.
+ * @command: The command to check.
  *
- * Return: 1 if true, 0 otherwise.
+ * Return: 1 if true, 0 if false.
  */
-int is_absolute_path(char *cmd)
+int is_absolute_path(char *command)
 {
-	return (cmd[0] == '/');
+	return (command[0] == '/');
 }
 
 /**
- * execute_command - Executes a command line with arguments.
- * @line: The command line to execute.
- * @env: The environment variables.
- *
- * Return: 0 on success, or -1 on failure.
+ * handle_command_not_found - Handles a command not found situation.
+ * @command: The command that was not found.
  */
-int execute_command(char *line, char *env[])
+void handle_command_not_found(char *command)
 {
-	char *argv[MAX_ARGS];
-	int i = 0;
-
-	argv[i] = strtok(line, " ");
-	while (argv[i] != NULL && i < MAX_ARGS - 1)
-	{
-		i++;
-		argv[i] = strtok(NULL, " ");
-	}
-	argv[i] = NULL;
-
-	if (argv[0] == NULL)
-		return (0);
-	if (is_absolute_path(argv[0]))
-	{
-		if (access(argv[0], X_OK) == 0)
-			return (execute_command_in_child(argv, env));
-		handle_command_not_found(argv[0]);
-		return (-1);
-	}
-	return (execute_command_in_child(argv, env));
+	printf("%s: command not found\n", command);
 }
