@@ -6,12 +6,15 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+
 
 #define MAX_ARGS 64  /* Maximum number of arguments */
 
 /* Function prototypes */
 ssize_t read_command(char **line, size_t *len);
 int execute_command(char *line);
+
+/*Helper functions*/
+void *_realloc(char *str);
 
 #endif /* MAIN_H */

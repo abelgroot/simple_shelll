@@ -42,11 +42,11 @@ int execute_command(char *line)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else
-	{
+//	else
+//	{
 		/* In parent process, wait for the child to finish */
-		waitpid(child_pid, &status, 0);
-	}
+//		waitpid(child_pid, &status, 0);
+//	}
 
 	return (0);
 }
