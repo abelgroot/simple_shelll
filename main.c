@@ -15,6 +15,7 @@ int main(int argc, char *argv[], char *env[])
 	ssize_t nread;
 
 	(void)argc;
+	(void)argv;  /* Mark argv as unused to avoid warnings */
 
 	while (1)
 	{
