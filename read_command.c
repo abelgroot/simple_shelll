@@ -1,21 +1,22 @@
 #include "main.h"
 
 /**
- * read_command - Reads a command line from stdin.
- * @line: Pointer to the buffer storing the command.
- * @len: Pointer to the size of the buffer.
+ * read_command - Reads a command from standard input.
  *
- * Return: The number of characters read, or -1 on failure.
+ * Return: The command entered by the user.
  */
-ssize_t read_command(char **line, size_t *len)
+char *read_command(void)
 {
-	ssize_t nread;
+	char *buffer = NULL;
+	size_t bufsize = 0;
+	ssize_t characters_read;
 
-	nread = getline(line, len, stdin);
-	if (nread != -1)
+	characters_read = getline(&buffer, &bufsize, stdin);
+
+	if (characters_read == -1)
 	{
-		(*line)[nread - 1] = '\0';  /* Remove newline character */
+		free(buffer);
+		return (NULL);
 	}
-
-	return (nread);
+	return (buffer);
 }
