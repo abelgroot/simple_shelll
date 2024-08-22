@@ -20,7 +20,7 @@ static int handle_args(char *command, char ***args, size_t *args_size)
 		return (-1);
 	}
 
-	token = strtok(command, " \n");
+	token = strtok(command, " \t\n");
 	i = 0;
 	while (token != NULL)
 	{
@@ -56,7 +56,7 @@ static int process_command(char *command, char *env[])
 	int num_args;
 	char *command_path;
 
-	args_size = 10;
+	args_size = 128;
 	num_args = handle_args(command, &args, &args_size);
 	if (num_args == -1)
 	{
