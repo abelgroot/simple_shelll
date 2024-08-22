@@ -1,20 +1,27 @@
 #include "main.h"
 
 /**
- * execute_command - Executes a command in a child process.
- * @command: The command to execute.
- * @args: The arguments for the command.
+ * handle_command_not_found - Handles a command not found error.
+ * @command: The command that was not found.
+ */
+void handle_command_not_found(char *command)
+{
+	printf("%s: command not found\n", command);
+}
+
+/**
+ * execute_command_in_child - Executes a command in a child process.
+ * @command_path: The path to the command.
+ * @args: The arguments to the command.
  * @env: The environment variables.
  *
  * Return: 0 on success, -1 on failure.
  */
-int execute_command(char *command, char **args, char *env[])
+static int execute_command_in_child(
+	char *command_path, char *args[], char *env[])
 {
 	pid_t pid;
 	int status;
-
-	if (command == NULL)
-		return (-1);
 
 	pid = fork();
 	if (pid == -1)
@@ -22,39 +29,45 @@ int execute_command(char *command, char **args, char *env[])
 		perror("fork");
 		return (-1);
 	}
+
 	if (pid == 0)
 	{
-		if (execve(command, args, env) == -1)
+		if (execve(command_path, args, env) == -1)
 		{
 			perror("execve");
-			exit(EXIT_FAILURE);
+			_exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
-		do {
-			waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status) == EXIT_FAILURE)
+			return (-1);
 	}
+
 	return (0);
 }
 
 /**
- * is_absolute_path - Checks if a command is an absolute path.
- * @command: The command to check.
+ * is_absolute_path - Checks if the path is an absolute path.
+ * @path: The path to check.
  *
- * Return: 1 if true, 0 if false.
+ * Return: 1 if absolute path, 0 otherwise.
  */
-int is_absolute_path(char *command)
+int is_absolute_path(char *path)
 {
-	return (command[0] == '/');
+	return (path[0] == '/');
 }
 
 /**
- * handle_command_not_found - Handles a command not found situation.
- * @command: The command that was not found.
+ * execute_command - Executes a command based on its path.
+ * @command_path: The path to the command.
+ * @args: The arguments to the command.
+ * @env: The environment variables.
+ *
+ * Return: 0 on success, -1 on failure.
  */
-void handle_command_not_found(char *command)
+int execute_command(char *command_path, char *args[], char *env[])
 {
-	printf("%s: command not found\n", command);
+	return (execute_command_in_child(command_path, args, env));
 }

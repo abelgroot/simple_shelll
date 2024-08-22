@@ -3,25 +3,30 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <dirent.h>
 
-#define BUFFER_SIZE 1024
+#define MAX_PATH_LENGTH 1024
 
-/* Function Prototypes */
-int execute_command(char *command, char **args, char *env[]);
+/**
+* struct path_list - A node in the linked list of PATH directories.
+* @path: A directory path.
+* @next: Pointer to the next node in the list.
+*/
+typedef struct path_list
+{
+	char *path;
+	struct path_list *next;
+} path_list;
+
 char *read_command(void);
-char *find_path(char *command, char **env);
-int is_absolute_path(char *command);
+char *find_path(char *command, char *env[]);
+int execute_command(char *command_path, char *args[], char *env[]);
 void handle_command_not_found(char *command);
-char **build_path_list(char **env);
-void free_path_list(char **path_list);
-int _setenv(const char *name, const char *value, int overwrite);
-char *get_env_var(const char *name, char **env);
+int is_absolute_path(char *path);
+int setenv(const char *name, const char *value);
 
 #endif /* MAIN_H */
