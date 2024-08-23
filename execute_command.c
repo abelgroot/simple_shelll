@@ -17,7 +17,7 @@ void handle_command_not_found(char *command)
  *
  * Return: 0 on success, -1 on failure.
  */
-static int execute_command_in_child(
+int execute_command_in_child(
 	char *command_path, char *args[], char *env[])
 {
 	pid_t pid;
