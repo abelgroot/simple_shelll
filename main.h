@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+//#include <sys/wait.h>
 #include <sys/stat.h>
 
 /* Maximum length for a path */
@@ -36,5 +36,8 @@ int execute_command(char *command_path, char *args[], char *env[]);
 void handle_command_not_found(char *command);
 int is_absolute_path(char *path);
 int my_setenv(const char *name, const char *value);
+
+/*Helper functions*/
+void *_realloc(char *str);
 
 #endif /* MAIN_H */
