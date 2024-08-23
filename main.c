@@ -56,7 +56,7 @@ static int process_command(char *command, char *env[])
 	int num_args;
 	char *command_path;
 
-	args_size = 128;
+	args_size = 20;
 	num_args = handle_args(command, &args, &args_size);
 	if (num_args == -1)
 	{
