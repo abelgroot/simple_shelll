@@ -1,9 +1,9 @@
 #include "main.h"
 
 /**
- * read_command - Reads a command from the standard input
+ * read_command - Reads a command from standard input.
  *
- * Return: The command read from the standard input
+ * Return: The command entered by the user or NULL on failure.
  */
 char *read_command(void)
 {
@@ -12,6 +12,7 @@ char *read_command(void)
 	ssize_t characters_read;
 
 	characters_read = getline(&buffer, &bufsize, stdin);
+
 	if (characters_read == -1)
 	{
 		free(buffer);

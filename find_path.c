@@ -1,18 +1,19 @@
 #include "main.h"
 
 /**
- * find_path - Finds the full path of a command
- * @command: The command to find the path for
- * @env: The environment variables
+ * find_path - Finds the full path of a command.
+ * @command: The command to find.
+ * @env: The environment variables.
  *
- * Return: The full path of the command, or NULL if not found
+ * Return: The full path of the command or NULL if not found.
  */
 char *find_path(char *command, char **env)
 {
-	char **path_list = build_path_list(env);
+	char **path_list;
 	char *full_path = NULL;
 	int i;
 
+	path_list = build_path_list(env);
 	if (path_list == NULL)
 		return (NULL);
 
@@ -34,26 +35,25 @@ char *find_path(char *command, char **env)
 			free_path_list(path_list);
 			return (full_path);
 		}
-
 		free(full_path);
 	}
-
 	free_path_list(path_list);
 	return (NULL);
 }
 
 /**
- * build_path_list - Builds a list of directories in the PATH variable
- * @env: The environment variables
+ * build_path_list - Builds a list of directories from the PATH variable.
+ * @env: The environment variables.
  *
- * Return: An array of directories in PATH, or NULL on failure
+ * Return: An array of directories or NULL on failure.
  */
 char **build_path_list(char **env)
 {
-	char *path_var = get_env_var("PATH", env);
-	char **path_list = NULL;
+	char *path_var;
+	char **path_list;
 	int i = 0;
 
+	path_var = get_env_var("PATH", env);
 	if (path_var == NULL)
 		return (NULL);
 
@@ -67,13 +67,12 @@ char **build_path_list(char **env)
 		i++;
 		path_list[i] = strtok(NULL, ":");
 	}
-
 	return (path_list);
 }
 
 /**
- * free_path_list - Frees the memory allocated for the path list
- * @path_list: The list of directories in PATH to free
+ * free_path_list - Frees the memory allocated for the path list.
+ * @path_list: The list to free.
  */
 void free_path_list(char **path_list)
 {

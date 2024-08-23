@@ -1,37 +1,39 @@
 #include "main.h"
 
 /**
- * execute_command - Forks a process to execute a command
- * @full_path: The full path to the command
- * @args: The arguments for the command
- * @env: The environment variables
- *
- * Return: The status of the executed command
+ * execute_command - Executes a command.
+ * @command: The command to execute.
+ * @env: The environment variables.
  */
-int execute_command(char *full_path, char **args, char **env)
+void execute_command(char *command, char **env)
 {
+	char *full_path;
 	pid_t pid;
 	int status;
 
-	pid = fork();
-	if (pid == 0)
+	full_path = find_path(command, env);
+	if (full_path == NULL)
 	{
-		if (execve(full_path, args, env) == -1)
-		{
-			perror("execve");
-			_exit(EXIT_FAILURE);
-		}
-	}
-	else if (pid < 0)
-	{
-		perror("fork");
-	}
-	else
-	{
-		do {
-			waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		write(STDERR_FILENO, command, strlen(command));
+		write(STDERR_FILENO, ": command not found\n", 21);
+		return;
 	}
 
-	return ((WIFEXITED(status)) ? WEXITSTATUS(status) : -1);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		free(full_path);
+		return;
+	}
+
+	if (pid == 0)
+	{
+		execve(full_path, (char *const []){command, NULL}, env);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
+
+	waitpid(pid, &status, 0);
+	free(full_path);
 }

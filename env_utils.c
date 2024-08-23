@@ -1,11 +1,27 @@
 #include "main.h"
 
 /**
- * get_env_var - Gets the value of an environment variable
- * @name: The name of the environment variable
- * @env: The environment variables
+ * _setenv - Sets or modifies an environment variable.
+ * @name: The name of the variable.
+ * @value: The value of the variable.
+ * @overwrite: Overwrite flag (1 to overwrite, 0 to not).
  *
- * Return: The value of the environment variable, or NULL if not found
+ * Return: 0 on success, -1 on failure.
+ */
+int _setenv(const char *name, const char *value, int overwrite)
+{
+	if (get_env_var(name, environ) != NULL && !overwrite)
+		return (0);
+
+	return (setenv(name, value, 1));
+}
+
+/**
+ * get_env_var - Retrieves an environment variable.
+ * @name: The name of the variable.
+ * @env: The environment variables.
+ *
+ * Return: The value of the variable or NULL if not found.
  */
 char *get_env_var(const char *name, char **env)
 {
@@ -19,6 +35,5 @@ char *get_env_var(const char *name, char **env)
 			return (env[i] + len + 1);
 		}
 	}
-
 	return (NULL);
 }

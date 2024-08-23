@@ -1,65 +1,49 @@
 #include "main.h"
 
 /**
- * print_prompt - Prints the shell prompt to the standard output
- *
- * This function displays the prompt symbol for the user to enter a command.
- * It is typically called before reading a command in a loop.
+ * print_prompt - Prints the shell prompt.
  */
 void print_prompt(void)
 {
-	if (isatty(STDIN_FILENO))
-	{
-		write(STDOUT_FILENO, "#cisfun$ ", 9);
-	}
+	write(STDOUT_FILENO, "#cisfun$ ", 9);
 }
 
 /**
- * main - Entry point of the simple shell
+ * main - Entry point for the shell.
+ * @argc: Argument count.
+ * @argv: Argument vector.
+ * @env: Environment variables.
  *
- * Return: Status of the shell execution
+ * Return: Always 0.
  */
-int main(void)
+int main(int argc, char **argv, char **env)
 {
-	char *command;
+	char *command = NULL;
 	char **args;
-	char *full_path;
-	int status = 0;
+	int status;
+
+	if (argc != 1)
+		return (1);
 
 	while (1)
 	{
 		print_prompt();
-
 		command = read_command();
 		if (command == NULL)
-		{
-			if (isatty(STDIN_FILENO))
-				_putchar('\n');
 			break;
-		}
 
 		args = split_command(command);
-		if (args[0] == NULL)
+		if (args == NULL)
 		{
 			free(command);
-			free(args);
 			continue;
 		}
 
-		full_path = find_path(args[0], environ);
-		if (full_path == NULL)
-		{
-			perror(args[0]);
-		}
-		else
-		{
-			status = execute_command(full_path, args, environ);
-			free(full_path);
-		}
+		execute_command(args[0], env);
 
 		free(command);
 		free(args);
 	}
 
-	return (status);
+	return (0);
 }
