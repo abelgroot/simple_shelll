@@ -24,5 +24,7 @@ char **build_path_list(char **env);
 void free_path_list(char **path_list);
 char *get_env_var(const char *name, char **env);
 void *_realloc(char *str);
+int _putchar(char c);
+void _flush_buffer(void);
 
 #endif /* MAIN_H */
