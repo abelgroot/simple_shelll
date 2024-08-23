@@ -1,10 +1,12 @@
 #include "main.h"
 
+#define MAX_ARGS 100
+
 /**
- * split_command - Splits a command string into individual arguments.
- * @command: The command string to split.
+ * split_command - Splits a command into arguments.
+ * @command: The command to split.
  *
- * Return: An array of arguments or NULL on failure.
+ * Return: An array of arguments.
  */
 char **split_command(char *command)
 {
@@ -12,26 +14,18 @@ char **split_command(char *command)
 	char *token;
 	int i = 0;
 
-	if (command == NULL)
-		return (NULL);
-
-	args = malloc(BUFFER_SIZE * sizeof(char *));
+	args = malloc(sizeof(char *) * MAX_ARGS);
 	if (args == NULL)
 		return (NULL);
 
-	token = strtok(command, " \n");
+	token = strtok(command, " \t\n");
 	while (token != NULL)
 	{
-		args[i] = _realloc(args[i]);
-		if (args[i] == NULL)
-		{
-			free(args);
-			return (NULL);
-		}
-		strcpy(args[i], token);
+		args[i] = token;
 		i++;
-		token = strtok(NULL, " \n");
+		token = strtok(NULL, " \t\n");
 	}
+
 	args[i] = NULL;
 	return (args);
 }

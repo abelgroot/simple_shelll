@@ -1,49 +1,47 @@
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * print_prompt - Prints the shell prompt.
- */
-void print_prompt(void)
-{
-	write(STDOUT_FILENO, "#cisfun$ ", 9);
-}
-
-/**
- * main - Entry point for the shell.
- * @argc: Argument count.
- * @argv: Argument vector.
- * @env: Environment variables.
+ * main - Entry point of the shell program
+ * @argc: Argument count
+ * @argv: Argument vector
+ * @env: Environment variables
  *
- * Return: Always 0.
+ * Return: Always 0
  */
 int main(int argc, char **argv, char **env)
 {
 	char *command = NULL;
-	char **args;
-	int status;
+	size_t size = 0;
+	ssize_t nread;
 
-	if (argc != 1)
-		return (1);
+	(void)argc;
+	(void)argv;
 
 	while (1)
 	{
 		print_prompt();
-		command = read_command();
-		if (command == NULL)
-			break;
-
-		args = split_command(command);
-		if (args == NULL)
+		nread = getline(&command, &size, stdin);
+		if (nread == -1)
 		{
 			free(command);
-			continue;
+			if (feof(stdin))
+			{
+				exit(EXIT_SUCCESS);
+			}
+			perror("getline");
+			exit(EXIT_FAILURE);
 		}
-
-		execute_command(args[0], env);
-
-		free(command);
-		free(args);
+		if (command[nread - 1] == '\n')
+		{
+			command[nread - 1] = '\0';
+		}
+		if (command[0] != '\0')
+		{
+			execute_command(command, env);
+		}
 	}
-
+	free(command);
 	return (0);
 }

@@ -1,29 +1,12 @@
 #include "main.h"
 
-static char buffer[BUFFER_SIZE];
-static int buffer_index;
-
 /**
-* _putchar - Writes a character to the buffer.
-* @c: The character to write.
-*
-* Return: On success 1.
-*/
+ * _putchar - Writes a character to standard output.
+ * @c: The character to write.
+ *
+ * Return: The character written or -1 on error.
+ */
 int _putchar(char c)
 {
-	if (buffer_index >= BUFFER_SIZE)
-		_flush_buffer();
-
-	buffer[buffer_index++] = c;
-	return (1);
+	return (write(STDOUT_FILENO, &c, 1));
 }
-
-/**
-* _flush_buffer - Flushes the buffer to stdout.
-*/
-void _flush_buffer(void)
-{
-	write(1, buffer, buffer_index);
-	buffer_index = 0;
-}
-

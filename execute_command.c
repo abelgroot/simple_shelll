@@ -7,9 +7,9 @@
  */
 void execute_command(char *command, char **env)
 {
-	char *full_path;
 	pid_t pid;
-	int status;
+	char *full_path;
+	char **args;
 
 	full_path = find_path(command, env);
 	if (full_path == NULL)
@@ -19,21 +19,29 @@ void execute_command(char *command, char **env)
 		return;
 	}
 
+	args = split_command(command);
+
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
 		free(full_path);
+		free(args);
 		return;
 	}
 
 	if (pid == 0)
 	{
-		execve(full_path, (char *const []){command, NULL}, env);
+		execve(full_path, args, env);
 		perror("execve");
-		exit(EXIT_FAILURE);
+		free(full_path);
+		free(args);
+		exit(1);
 	}
-
-	waitpid(pid, &status, 0);
-	free(full_path);
+	else
+	{
+		wait(NULL);
+		free(full_path);
+		free(args);
+	}
 }

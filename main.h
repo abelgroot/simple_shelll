@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+extern char **environ;
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
