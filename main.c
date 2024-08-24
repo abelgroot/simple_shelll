@@ -3,6 +3,16 @@
 #include <stdlib.h>
 
 /**
+ * print_prompt - Print the shell prompt
+ *
+ * Return: void
+ */
+void print_prompt(void)
+{
+	printf("#cisfun$ ");
+}
+
+/**
  * main - Entry point of the shell program
  * @argc: Argument count
  * @argv: Argument vector
