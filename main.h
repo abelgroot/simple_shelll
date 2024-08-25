@@ -12,6 +12,8 @@ extern char **environ;
 #include <sys/stat.h>
 #include <fcntl.h>
 
+void interactive_mode(void);
+void non_interactive_mode(void);
 
 #define MAX_FILES 1024  /* Adjust as needed for your application */
 
@@ -32,7 +34,7 @@ static FileDescriptorMapping file_map[MAX_FILES];
 #define BUFFER_SIZE 1024
 
 char *read_command(void);
-void execute_command(char *command, char **env);
+int execute_command(char *command, char **env);
 char *find_path(char *command, char **env);
 char **build_path_list(char **env);
 void free_path_list(char **path_list);

@@ -5,12 +5,13 @@
  * @command: The command to execute.
  * @env: The environment variables.
  */
-void execute_command(char *command, char **env)
+int execute_command(char *command, char **env)
 {
 	pid_t pid;
 	char *full_path;
 	char **args;
-	
+	int status = -1;
+
 	args = split_command(command);
 
 	/*Handling the exit command*/
@@ -33,7 +34,7 @@ void execute_command(char *command, char **env)
 			write(STDERR_FILENO, command, _strlen(command));
 			write(STDERR_FILENO, ": command not found\n", 21);
 			free(args);
-			return;
+			return (status);
 		}
 	}
 
@@ -43,12 +44,12 @@ void execute_command(char *command, char **env)
 		perror("fork");
 		free(full_path);
 		free(args);
-		return;
+		return (status);
 	}
 
 	if (pid == 0)
 	{
-		execve(full_path, args, env);
+		status = execve(full_path, args, env);
 		perror("execve");
 		if(full_path != args[0])/*prevents double freeing hence enables executing compiled files more than once*/
 			free(full_path);
@@ -62,4 +63,5 @@ void execute_command(char *command, char **env)
 			free(full_path);
 		free(args);
 	}
+	return (status);
 }

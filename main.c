@@ -1,9 +1,4 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-extern char **environ;
 
 /**
  * main - Entry point of the shell program
@@ -15,17 +10,26 @@ extern char **environ;
  */
 int main(void)
 {
+	if (isatty(STDIN_FILENO) == 1)
+	{
+		interactive_mode();
+	}
+	else 
+		non_interactive_mode();
+
+	return (0);
+}
+
+void interactive_mode(void)
+{
 	char *command = NULL;
 	size_t size = 0;
 	ssize_t nread;
+	int status = -1;
 
-	printf("is a tty %d", isatty(STDIN_FILENO));
 	while (1)
 	{
-		if (isatty(STDIN_FILENO) == 1)
-		{
-			printf("#cisfun$ ");
-		}
+		printf("#cisfun$ ");
 		nread = _getline(&command, &size,STDIN_FILENO);
 		if (nread == -1)
 		{
@@ -43,9 +47,49 @@ int main(void)
 		}
 		if (command[0] != '\0')
 		{
-			execute_command(command, environ);
+			status = execute_command(command, environ);
+		}
+		if (status >= 0)
+		{
+			exit(status);
 		}
 	}
 	free(command);
-	return (0);
+}
+
+void non_interactive_mode(void)
+{
+	char *command = NULL;
+	size_t size = 0;
+	ssize_t nread;
+	int status = -1;
+
+	while (1)
+	{
+		nread = _getline(&command, &size,STDIN_FILENO);
+		if (nread == -1)
+		{
+			free(command);
+			if (feof(stdin))
+			{
+				exit(EXIT_SUCCESS);
+			}
+			perror("getline");
+			exit(EXIT_FAILURE);
+		}
+		if (command[nread - 1] == '\n')
+		{
+			command[nread - 1] = '\0';
+		}
+		if (command[0] != '\0')
+		{
+			status = execute_command(command, environ);
+		}
+		if (status >= 0)
+		{
+			exit(status);
+		}
+	}
+	free(command);
+
 }
