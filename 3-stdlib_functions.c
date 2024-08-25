@@ -73,3 +73,4 @@ ssize_t _getline(char **lineptr, size_t *n, int stream)
 	(*lineptr)[nread] = '\0';
 	return (nread);
 }
+

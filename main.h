@@ -37,4 +37,7 @@ int _strcmp(char *s1, char *s2);
 char *_strdup(char *str);
 char *_strtok(char *str, const char *delim);
 
+ssize_t _getline(char **lineptr, size_t *n, int stream);
+int realloc_buffer(char **lineptr, size_t *n, size_t size, ssize_t nread);
+
 #endif /* MAIN_H */
