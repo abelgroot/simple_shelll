@@ -105,3 +105,62 @@ char *_strdup(char *str)
 
 	return (ptr);
 }
+
+#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * my_strchr - Checks if a character is in the delimiter string
+ * @str: The string to search in
+ * @ch: The character to search for
+ * Return: 1 if character is found, 0 otherwise
+ */
+int my_strchr(const char *str, char ch)
+{
+	while (*str)
+	{
+		if (*str == ch)
+			return (1);
+		str++;
+	}
+	return (0);
+}
+
+/**
+ * my_strtok - Tokenizes a string
+ * @str: The string to tokenize
+ * @delim: The delimiter string
+ * Return: A pointer to the next token or NULL
+ */
+char *_strtok(char *str, const char *delim)
+{
+	static char *buffer;
+	char *token;
+
+	if (str)
+		buffer = str;
+	else if (!buffer)
+		return (NULL);
+
+	/*Skip leading delimiters*/
+	while (*buffer && my_strchr(delim, *buffer))
+		buffer++;
+
+	if (!*buffer)
+		return (NULL);
+
+	token = buffer;
+
+	/*Find the end of the token*/
+	while (*buffer && !my_strchr(delim, *buffer))
+		buffer++;
+
+	if (*buffer)
+	{
+		*buffer = '\0';
+		buffer++;
+	}
+
+	return (token);
+}
