@@ -106,12 +106,6 @@ char *_strdup(char *str)
 	return (ptr);
 }
 
-<<<<<<< HEAD
-=======
-#include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
-
 /**
  * my_strchr - Checks if a character is in the delimiter string
  * @str: The string to search in
@@ -166,4 +160,3 @@ char *_strtok(char *str, const char *delim)
 
 	return (token);
 }
->>>>>>> a9d916871d7ff29c4b747a87370914c41c8b4184
