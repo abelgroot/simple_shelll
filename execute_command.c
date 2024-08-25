@@ -12,6 +12,14 @@ void execute_command(char *command, char **env)
 	char **args;
 	
 	args = split_command(command);
+
+	/*Handling the exit command*/
+	if (_strcmp(args[0],"exit") == 0)
+	{
+		free(args);
+		exit(EXIT_SUCCESS);
+	}
+
 	/*to check if the absolute path is specified i.e /bin/ls*/
 	if(args[0][0] == '/' || args[0][1] == '/')
 	{
@@ -24,6 +32,7 @@ void execute_command(char *command, char **env)
 		{
 			write(STDERR_FILENO, command, _strlen(command));
 			write(STDERR_FILENO, ": command not found\n", 21);
+			free(args);
 			return;
 		}
 	}
@@ -41,14 +50,16 @@ void execute_command(char *command, char **env)
 	{
 		execve(full_path, args, env);
 		perror("execve");
-		free(full_path);
+		if(full_path != args[0])/*prevents double freeing hence enables executing compiled files more than once*/
+			free(full_path);
 		free(args);
 		exit(1);
 	}
 	else
 	{
 		wait(NULL);
-		free(full_path);
+		if(full_path != args[0]) /*prevents double freeing hence enables executing compiled files more than once*/
+			free(full_path);
 		free(args);
 	}
 }
