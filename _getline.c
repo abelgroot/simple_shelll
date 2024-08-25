@@ -1,14 +1,17 @@
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 /**
-* realloc_buffer - Resizes the buffer when it runs out of space.
-* @lineptr: Pointer to the buffer.
-* @n: Pointer to the size of the buffer.
-* @size: Current size of the buffer.
-* @nread: Number of characters read so far.
-*
-* Return: 0 on success, -1 on failure.
-*/
+ * realloc_buffer - Resizes the buffer when it runs out of space.
+ * @lineptr: Pointer to the buffer.
+ * @n: Pointer to the size of the buffer.
+ * @size: Current size of the buffer.
+ * @nread: Number of characters read so far.
+ *
+ * Return: 0 on success, -1 on failure.
+ */
 int realloc_buffer(char **lineptr, size_t *n, size_t size, ssize_t nread)
 {
 	size_t new_size = size * 2;
@@ -29,13 +32,13 @@ int realloc_buffer(char **lineptr, size_t *n, size_t size, ssize_t nread)
 }
 
 /**
-* _getline - Reads an entire line from a stream using the read system call.
-* @lineptr: Pointer to the buffer that will store the line read.
-* @n: Pointer to the size of the buffer.
-* @stream: The file descriptor to read from.
-*
-* Return: The number of characters read, or -1 on failure or EOF.
-*/
+ * _getline - Reads an entire line from a stream using the read system call.
+ * @lineptr: Pointer to the buffer that will store the line read.
+ * @n: Pointer to the size of the buffer.
+ * @stream: The FILE * stream to read from.
+ *
+ * Return: The number of characters read, or -1 on failure or EOF.
+ */
 ssize_t _getline(char **lineptr, size_t *n, int stream)
 {
 	ssize_t nread = 0;
@@ -62,8 +65,11 @@ ssize_t _getline(char **lineptr, size_t *n, int stream)
 			return (nread > 0 ? nread : -1);
 
 		if ((size_t)nread >= size - 1)
+		{
 			if (realloc_buffer(lineptr, n, size, nread) == -1)
 				return (-1);
+			size = *n;
+		}
 
 		(*lineptr)[nread++] = buffer[0];
 		if (buffer[0] == '\n')
@@ -73,4 +79,3 @@ ssize_t _getline(char **lineptr, size_t *n, int stream)
 	(*lineptr)[nread] = '\0';
 	return (nread);
 }
-

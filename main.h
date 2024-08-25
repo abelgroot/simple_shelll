@@ -12,10 +12,25 @@ extern char **environ;
 #include <sys/stat.h>
 #include <fcntl.h>
 
+
+#define MAX_FILES 1024  /* Adjust as needed for your application */
+
+/**
+ * struct FileDescriptorMapping - Structure to map FILE * to file descriptors
+ * @stream: The FILE * stream.
+ * @fd: The file descriptor associated with the stream.
+ */
+typedef struct FileDescriptorMapping
+{
+	FILE *stream;
+	int fd;
+} FileDescriptorMapping;
+
+static FileDescriptorMapping file_map[MAX_FILES];
+
 /* Buffer size for command and environment handling */
 #define BUFFER_SIZE 1024
 
-void print_prompt(void);
 char *read_command(void);
 void execute_command(char *command, char **env);
 char *find_path(char *command, char **env);
@@ -37,7 +52,9 @@ int _strcmp(char *s1, char *s2);
 char *_strdup(char *str);
 char *_strtok(char *str, const char *delim);
 
+/*a mimic of getline function*/
 ssize_t _getline(char **lineptr, size_t *n, int stream);
 int realloc_buffer(char **lineptr, size_t *n, size_t size, ssize_t nread);
+
 
 #endif /* MAIN_H */

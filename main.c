@@ -2,15 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-/**
- * print_prompt - Print the shell prompt
- *
- * Return: void
- */
-void print_prompt(void)
-{
-	printf("#cisfun$ ");
-}
+
+extern char **environ;
 
 /**
  * main - Entry point of the shell program
@@ -20,22 +13,20 @@ void print_prompt(void)
  *
  * Return: Always 0
  */
-int main(int argc, char **argv, char **env)
+int main(void)
 {
 	char *command = NULL;
 	size_t size = 0;
 	ssize_t nread;
 
-	(void)argc;
-	(void)argv;
-
+	printf("is a tty %d", isatty(STDIN_FILENO));
 	while (1)
 	{
-		if (isatty(STDIN_FILENO))
+		if (isatty(STDIN_FILENO) == 1)
 		{
-			print_prompt();
+			printf("#cisfun$ ");
 		}
-		nread = _getline(&command, &size, 1);
+		nread = _getline(&command, &size,STDIN_FILENO);
 		if (nread == -1)
 		{
 			free(command);
@@ -52,7 +43,7 @@ int main(int argc, char **argv, char **env)
 		}
 		if (command[0] != '\0')
 		{
-			execute_command(command, env);
+			execute_command(command, environ);
 		}
 	}
 	free(command);
