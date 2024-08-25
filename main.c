@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <unistd.h>
 /**
  * print_prompt - Print the shell prompt
  *
@@ -31,8 +31,11 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		print_prompt();
-		nread = getline(&command, &size, stdin);
+		if (isatty(STDIN_FILENO))
+		{
+			print_prompt();
+		}
+		nread = _getline(&command, &size, 1);
 		if (nread == -1)
 		{
 			free(command);
