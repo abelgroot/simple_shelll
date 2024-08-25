@@ -16,13 +16,13 @@ int _setenv(const char *name, const char *value, int overwrite)
 	char **env = environ; /* Use the global environ variable */
 	char *new_var;
 	size_t i;
-	size_t name_len = strlen(name);
-	size_t value_len = strlen(value);
+	size_t name_len = _strlen(name);
+	size_t value_len = _strlen(value);
 
 	/* Check if environment variable already exists */
 	for (i = 0; env[i] != NULL; i++)
 	{
-		if (strncmp(env[i], name, name_len) == 0 &&
+		if (_strncmp(env[i], name, name_len) == 0 &&
 			env[i][name_len] == '=')
 		{
 			if (overwrite)

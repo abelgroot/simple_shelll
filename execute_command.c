@@ -10,16 +10,23 @@ void execute_command(char *command, char **env)
 	pid_t pid;
 	char *full_path;
 	char **args;
-
-	full_path = find_path(command, env);
-	if (full_path == NULL)
-	{
-		write(STDERR_FILENO, command, strlen(command));
-		write(STDERR_FILENO, ": command not found\n", 21);
-		return;
-	}
-
+	
 	args = split_command(command);
+	/*to check if the absolute path is specified i.e /bin/ls*/
+	if(args[0][0] == '/' || args[0][1] == '/')
+	{
+		full_path = args[0];
+	}
+	else
+	{
+		full_path = find_path(command, env);
+		if (full_path == NULL)
+		{
+			write(STDERR_FILENO, command, _strlen(command));
+			write(STDERR_FILENO, ": command not found\n", 21);
+			return;
+		}
+	}
 
 	pid = fork();
 	if (pid == -1)

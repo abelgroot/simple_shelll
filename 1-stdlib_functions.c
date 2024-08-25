@@ -1,6 +1,37 @@
 #include "main.h"
 
 /**
+ * _putchar - Writes a character to standard output.
+ * @c: The character to write.
+ *
+ * Return: The character written or -1 on error.
+ */
+int _putchar(char c)
+{
+	return (write(STDOUT_FILENO, &c, 1));
+}
+
+/**
+ *  * _strncpy - copy a string
+ *   * @dest: input value
+ *    * @src: input value
+ *     * @n: input value
+ *      *
+ *       * Return: dest
+ */
+char *_strcpy(char *dest, const char *src)
+{
+	int j = 0;
+
+	while ((dest[j] = src[j]) != '\0')
+	{
+		j++;
+	}
+	dest[j + 1] = '\0'; 
+	return dest;
+}
+
+/**
  * _realloc - Reallocates memory for a string.
  * @str: The original string to reallocate.
  *
@@ -42,3 +73,36 @@ void *_realloc(char *str)
 	free(old_str);
 	return (new_str);
 }
+
+
+/**
+*_strcat - concatenates two strings
+*@dest: input value
+*@src: input value
+* Return: void
+ */
+char *_strcat(char *dest, char *src)
+{
+	int i;
+	int j;
+
+
+	i = 0;
+	while (dest[i] != '\0')
+	{
+		i++;
+
+	}
+	j = 0;
+	while (src[j] != '\0')
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+
+
+	dest[i] = '\0';
+	return (dest);
+}
+

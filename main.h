@@ -26,4 +26,13 @@ char *get_env_var(const char *name, char **env);
 char **split_command(char *command);
 void *_realloc(char *str);
 
+
+/*standard library Functions*/
+void *_realloc(char *str);
+char *_strcpy(char *dest, const char *src);
+char *_strcat(char *dest, char *src);
+int _strncmp(char *s1, const char *s2, int n);
+int _strlen(const char *s);
+int _strcmp(char *s1, char *s2);
+
 #endif /* MAIN_H */

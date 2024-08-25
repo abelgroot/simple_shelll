@@ -19,16 +19,16 @@ char *find_path(char *command, char **env)
 
 	for (i = 0; path_list[i]; i++)
 	{
-		full_path = malloc(strlen(path_list[i]) + strlen(command) + 2);
+		full_path = malloc(_strlen(path_list[i]) + _strlen(command) + 2);
 		if (full_path == NULL)
 		{
 			free_path_list(path_list);
 			return (NULL);
 		}
 
-		strcpy(full_path, path_list[i]);
-		strcat(full_path, "/");
-		strcat(full_path, command);
+		_strcpy(full_path, path_list[i]);
+		_strcat(full_path, "/");
+		_strcat(full_path, command);
 
 		if (access(full_path, X_OK) == 0)
 		{
