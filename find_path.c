@@ -64,11 +64,11 @@ char **build_path_list(char **env)
 	if (path_list == NULL)
 		return (NULL);
 
-	path_list[i] = strtok(path_var_copy, ":");
+	path_list[i] = _strtok(path_var_copy, ":");
 	while (path_list[i] != NULL)
 	{
 		i++;
-		path_list[i] = strtok(NULL, ":");
+		path_list[i] = _strtok(NULL, ":");
 	}
 	return (path_list);
 }
