@@ -1,0 +1,10 @@
+#folders and files
+.vscode/
+Betty
+
+# compiled files
+*.out
+*.exe
+
+#lazy commit
+commit.git
