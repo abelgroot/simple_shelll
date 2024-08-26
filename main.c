@@ -29,7 +29,7 @@ void interactive_mode(void)
 
 	while (1)
 	{
-		printf("#cisfun$ ");
+		write(STDOUT_FILENO, "#cisfun$ ", 10);
 		nread = _getline(&command, &size,STDIN_FILENO);
 		if (nread == -1)
 		{
