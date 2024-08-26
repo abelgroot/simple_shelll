@@ -10,14 +10,15 @@ void execute_command(char *command, char **env)
 	pid_t pid;
 	char *full_path;
 	char **args;
-	
+	int status;
 	args = split_command(command);
 
 	/*Handling the exit command*/
 	if (_strcmp(args[0],"exit") == 0)
 	{
+		status = _atoi(args[1]);
 		free(args);
-		exit(EXIT_SUCCESS);
+		exit(status);
 	}
 
 	/*to check if the absolute path is specified i.e /bin/ls*/
