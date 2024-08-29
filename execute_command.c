@@ -14,6 +14,8 @@ void execute_command(char *command, char **env)
 	args = split_command(command);
 
 	/*Handling the exit command*/
+	if (*args == NULL)
+		return;
 	if (_strcmp(args[0],"exit") == 0)
 	{
 		free(args);

@@ -9,7 +9,7 @@
  */
 void print_prompt(void)
 {
-	printf("#cisfun$ ");
+	write(1,"#cisfun$ ",9);
 }
 
 /**
